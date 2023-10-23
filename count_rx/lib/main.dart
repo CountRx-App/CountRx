@@ -1,6 +1,7 @@
-import 'package:count_rx/pages/home-page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+
+import 'pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
