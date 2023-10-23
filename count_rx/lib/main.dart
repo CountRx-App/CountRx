@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (lightColorScheme, darkColorScheme) => MaterialApp(
-        title: 'Flutter Demo',
+        title: 'CountRx',
         theme: ThemeData(
           colorScheme: lightColorScheme ?? _defaultLightColorScheme,
           useMaterial3: true,
@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: const HomePage(title: 'CountRx Home'),
+        home: const HomePage(
+          currentUser: "User",
+        ),
       ),
     );
   }
