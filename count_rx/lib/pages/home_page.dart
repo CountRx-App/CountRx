@@ -1,3 +1,4 @@
+import 'package:count_rx/components/home_page_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,6 +55,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      drawer: HomePageDrawer(),
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
