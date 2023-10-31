@@ -1,8 +1,14 @@
 import 'package:count_rx/pages/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+late List<CameraDescription> cameras;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
+
   runApp(const MyApp());
 }
 
@@ -29,8 +35,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: const HomePage(
+        home: HomePage(
           currentUser: "User",
+          cameras: cameras, // Invalid constant value error
         ),
       ),
     );

@@ -1,11 +1,17 @@
+import 'package:camera/camera.dart';
 import 'package:count_rx/components/home_page_drawer.dart';
 import 'package:flutter/material.dart';
 
+import 'camera_page.dart';
+
 class HomePage extends StatefulWidget {
   final String currentUser;
+  final List<CameraDescription>? cameras;
+
   const HomePage({
     super.key,
     required this.currentUser,
+    required this.cameras,
   });
 
   @override
@@ -60,7 +66,12 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           onPressed: () {
-            // TODO: Open camera page, when implemented
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CameraPage(cameras: widget.cameras),
+              ),
+            );
           },
           child: const Icon(Icons.camera_alt),
         ),
