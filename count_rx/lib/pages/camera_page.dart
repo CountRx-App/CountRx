@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import 'preview_page.dart';
+
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
 
@@ -45,13 +47,33 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  Future<void> _takePictureAndNavigate() async {
+    try {
+      final XFile picture = await controller.takePicture();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PreviewPage(imagePath: picture.path),
+        ),
+      );
+    } catch (e) {
+      print("Error taking picture: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return MaterialApp(
-      home: CameraPreview(controller),
+    return Scaffold(
+      body: CameraPreview(controller),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _takePictureAndNavigate,
+        child: const Icon(Icons.camera),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
