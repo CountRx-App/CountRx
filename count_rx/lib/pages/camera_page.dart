@@ -49,6 +49,8 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> _takePictureAndNavigate() async {
     try {
+      controller.setFlashMode(FlashMode.off);
+
       final XFile picture = await controller.takePicture();
 
       Navigator.push(
