@@ -1,9 +1,11 @@
+import 'package:count_rx/models/pill_counter.dart';
 import 'package:count_rx/pages/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
 late List<CameraDescription> cameras;
+PillCounter counter = PillCounter();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

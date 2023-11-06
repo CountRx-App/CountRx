@@ -42,7 +42,8 @@ dependencies:
   firebase_storage: ^11.4.0
   cloud_firestore: ^4.12.1
   firebase_ui_firestore: ^1.5.13
-  camera: ^0.10.5+5
+  learning_input_image: ^0.0.6+2
+  learning_object_detection: ^0.0.2
 
 dev_dependencies:
   flutter_test:

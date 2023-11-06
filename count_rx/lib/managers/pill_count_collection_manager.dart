@@ -10,7 +10,7 @@ class PillCountCollectionManager {
   PillCountCollectionManager._privateConstructor()
       : _ref = FirebaseFirestore.instance.collection(kPillCountCollectionPath);
 
-  Query<PillCount>? onlyMyPillCountQuery() {
+  Query<PillCount>? myPillCountQuery() {
     // TODO: implement after auth manager is implemented
 
     // TODO: make return type non nullable after implementation
