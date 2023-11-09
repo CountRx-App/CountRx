@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   TextEditingController titleTextController = TextEditingController();
   TextEditingController descriptionTextController = TextEditingController();
+  StreamSubscription? _pillCountSubscription;
   DateTime timestamp = DateTime.now();
 
   @override
@@ -39,12 +41,7 @@ class _EditPageState extends State<EditPage> {
         print("Got pill count!");
 
         if (PillCountDocumentManager.instance.hasAuthorUid) {
-          _userSubscription = UserDataDocumentManager.instance.startListening(
-              documentId:
-                  PillCountDocumentManager.instance.latestPillCount!.authorUid,
-              observer: () {
-                setState(() {});
-              });
+          setState(() {});
         }
         setState(() {});
       },
@@ -105,13 +102,13 @@ class _EditPageState extends State<EditPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FlexibleButton(
-                buttonText: 'Submit',
+                buttonText: 'Save and Close',
                 onClickCallback: () {},
               ),
-              // FlexibleButton(
-              //   buttonText: 'Cancel',
-              //   onClickCallback: () {},
-              // ),
+              FlexibleButton(
+                buttonText: 'Cancel',
+                onClickCallback: () {},
+              ),
             ],
           ),
         ],
