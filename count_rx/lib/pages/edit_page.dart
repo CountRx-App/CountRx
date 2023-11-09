@@ -3,16 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../components/flexible_button.dart';
+import '../managers/pill_count_document_manager.dart';
 
 class EditPage extends StatefulWidget {
-  final String imagePath;
-  final void Function(String, DateTime, String?) onSubmit;
+  final String documentId;
+  // final String imagePath;
+  // final void Function(String, DateTime, String?) onSubmit;
   // final void Function() onCancel;
 
-  const EditPage({
+  const EditPage(
+    this.documentId, {
     super.key,
-    required this.imagePath,
-    required this.onSubmit,
+
+    // required this.imagePath,
+    // required this.onSubmit,
     // required this.onCancel,
   });
 
@@ -24,6 +28,37 @@ class _EditPageState extends State<EditPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   DateTime timestamp = DateTime.now();
+
+  @override
+  void initState() {
+    PillCountDocumentManager.instance.clearLatest();
+
+    PillCountDocumentManager.instance.startListening(
+      documentId: widget.documentId,
+      observer: () {
+        print("Got pill count!");
+
+        if (PillCountDocumentManager.instance.hasAuthorUid) {
+          _userSubscription = UserDataDocumentManager.instance.startListening(
+              documentId:
+                  PillCountDocumentManager.instance.latestPillCount!.authorUid,
+              observer: () {
+                setState(() {});
+              });
+        }
+        setState(() {});
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    titleTextController.dispose();
+    descriptionTextController.dispose();
+    PillCountDocumentManager.instance.stopListening(_pillCountSubscription);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +106,7 @@ class _EditPageState extends State<EditPage> {
             children: [
               FlexibleButton(
                 buttonText: 'Submit',
-                onClickCallback: () {
-                  onSubmit();
-                },
+                onClickCallback: () {},
               ),
               // FlexibleButton(
               //   buttonText: 'Cancel',
