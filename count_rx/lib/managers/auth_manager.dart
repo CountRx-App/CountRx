@@ -5,121 +5,65 @@ import 'package:flutter/material.dart';
 
 class AuthManager {
   static final instance = AuthManager._privateConstructor();
+
   AuthManager._privateConstructor();
 
-  StreamSubscription? _authSubcription;
+  StreamSubscription? _authSubscription;
   User? _user;
-
-  Map<UniqueKey, Function> _loginObservers = {};
-  Map<UniqueKey, Function> _logoutObservers = {};
+  final Map<UniqueKey, Function> _loginObservers = {};
+  final Map<UniqueKey, Function> _logoutObservers = {};
 
   void beginListening() {
-    if (_authSubcription != null) {
-      return; // Already listening, avoid 2 subscriptions
+    if (_authSubscription != null) {
+      return; // Already listening; avoid multiple subscriptions
     }
-    _authSubcription =
-        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
       final isLogin = user != null && _user == null;
       final isLogout = user == null && _user != null;
+
       _user = user;
 
       if (isLogin) {
-        // Inform the login observers
-        print("Log in occurred");
-        for (Function observer in _loginObservers.values) {
-          observer();
+        // Inform login observers
+        for (final obs in _loginObservers.values) {
+          obs();
         }
       } else if (isLogout) {
-        // Inform the logout observers.
-        print("Log out occurred");
-        for (Function observer in _logoutObservers.values) {
-          observer();
+        // Inform logout observers
+        for (final obs in _loginObservers.values) {
+          obs();
         }
-      } else {
-        print("Double call, which is ignored, to the auth state");
       }
     });
   }
 
   void stopListening() {
-    _authSubcription?.cancel();
-    _authSubcription = null;
+    _authSubscription?.cancel();
+    _authSubscription = null;
   }
 
-  UniqueKey addLoginObserver(Function observer) {
-    beginListening(); // Just in case
-    // Make a map of UniqueKeys to login observers
+  UniqueKey addObserver({required Function observer, required bool isLogin}) {
+    // Make map of UniqueKeys to login observers
+    beginListening(); // Called if no subscription exists
     UniqueKey key = UniqueKey();
-    _loginObservers[key] = observer;
+    if (isLogin) {
+      _loginObservers[key] = observer;
+    } else {
+      _logoutObservers[key] = observer;
+    }
     return key;
   }
 
-  UniqueKey addLogoutObserver(Function observer) {
-    beginListening(); // Just in case
-    // Make a map of UniqueKeys to logout observers
-    UniqueKey key = UniqueKey();
-    _logoutObservers[key] = observer;
-    return key;
-  }
-
-  void removeObserver(UniqueKey? keyToRemove) {
-    _loginObservers.remove(keyToRemove); // Note 1 of this works
-    _logoutObservers.remove(keyToRemove); // The other is a no-op
-  }
-
-  Future<bool> createUserWithEmailPassword({
-    required BuildContext context,
-    required String emailAddress,
-    required String password,
-  }) async {
-    // From: https://firebase.google.com/docs/auth/flutter/password-auth
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "weak-password") {
-        _showAuthError(context, "The password provided is too weak.");
-      } else if (e.code == "email-already-in-use") {
-        _showAuthError(context, "The account already exists for that email.");
-      }
-    } catch (e) {
-      print(e);
+  void removeObserver(UniqueKey? key, {required bool isLogin}) {
+    if (isLogin) {
+      _loginObservers.remove(key);
+    } else {
+      _logoutObservers.remove(key);
     }
-    return false;
-  }
-
-  Future<bool> loginExistingUserWithEmailPassword({
-    required BuildContext context,
-    required String emailAddress,
-    required String password,
-  }) async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
-      print("Finished sign in");
-      return true;
-    } on FirebaseAuthException catch (e) {
-      print(e.code);
-      if (e.code == "user-not-found") {
-        _showAuthError(context, "No user found for that email.");
-      } else if (e.code == "wrong-password") {
-        _showAuthError(context, "Wrong password provided for that user.");
-      } else if (e.code == "invalid-login-credentials") {
-        _showAuthError(context, "Invalid login credentials");
-      } else {
-        _showAuthError(context, e.toString());
-      }
-    } catch (e) {
-      _showAuthError(context, e.toString());
-    }
-    return false;
   }
 
   void signOut() {
-    print("Signing out");
+    print("Signed out");
     FirebaseAuth.instance.signOut();
   }
 
@@ -131,22 +75,75 @@ class AuthManager {
     );
   }
 
-  // Develop the UI for signed in
-  // bool get isSignedIn => false; // Develop the UI for not signed in
+  Future<bool> createUserWithEmailPassword({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      print("Created new user in firebase");
+    } on FirebaseAuthException catch (err) {
+      if (err.code == "weak-password") {
+        _showAuthError(context, "Given password is too weak");
+      } else if (err.code == "email-already-in-use") {
+        _showAuthError(context, "Email already in use");
+      } else {
+        print("$err");
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> logInUserWithEmailPassword({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      _showAuthError(context, "Logged in");
+    } on FirebaseAuthException catch (err) {
+      if (err.code == "Iinvalid-login-credentials") {
+        _showAuthError(context, "Incorrect login");
+        print(err.code);
+      } else if (err.code == "user-not-found") {
+        _showAuthError(context, "No account found");
+      } else {
+        _showAuthError(context, "Invalid login credentials");
+        print("$err");
+      }
+
+      return false;
+    }
+
+    return true;
+  }
 
   bool get isSignedIn => _user != null;
   String get uid => _user?.uid ?? "";
   String get email => _user?.email ?? "";
 
-  bool get hasDisplayName =>
-      _user != null &&
-      _user!.displayName != null &&
-      _user!.displayName!.isNotEmpty;
+  // bool get hasDisplayName =>
+  //     _user != null &&
+  //     _user!.displayName != null &&
+  //     _user!.displayName!.isNotEmpty;
 
-  String get displayName => _user?.displayName ?? "";
+  // String get displayName => _user?.displayName ?? "";
 
-  bool get hasImageUrl =>
-      _user != null && _user!.photoURL != null && _user!.photoURL!.isNotEmpty;
+  // bool get hasImageUrl =>
+  //     _user != null && _user!.photoURL != null && _user!.photoURL!.isNotEmpty;
 
-  String get imageUrl => _user?.photoURL ?? "";
+  // String get imageUrl => _user?.photoURL ?? "";
 }

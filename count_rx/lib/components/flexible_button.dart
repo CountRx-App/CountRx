@@ -17,7 +17,6 @@ class FlexibleButton extends StatelessWidget {
     return Container(
       height: 40.0,
       width: 250.0,
-      // margin: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
         color: hollowButton
             ? const Color.fromARGB(0, 0, 0, 0)

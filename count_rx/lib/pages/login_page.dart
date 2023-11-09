@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 
 class LoginPage extends StatefulWidget {
-  final List<CameraDescription> cameras;
+  final List<CameraDescription>? cameras;
 
   const LoginPage({
     super.key,
@@ -21,6 +21,30 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  UniqueKey? _loginKey;
+
+  @override
+  void initState() {
+    emailController.text = "cosmicelijah@gmail.com";
+    passwordController.text = "Coconut2003!";
+    _loginKey = AuthManager.instance.addObserver(
+        observer: () {
+          print("Called my login observer");
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        },
+        isLogin: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AuthManager.instance.removeObserver(
+      _loginKey,
+      isLogin: true,
+    );
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,24 +99,16 @@ class _LoginPageState extends State<LoginPage> {
                 FlexibleButton(
                   onClick: () async {
                     if (_formKey.currentState!.validate()) {
-                      final isSuccessful = await AuthManager.instance
-                          .loginExistingUserWithEmailPassword(
+                      final isSuccessful =
+                          await AuthManager.instance.logInUserWithEmailPassword(
                         context: context,
-                        emailAddress: emailController.text,
+                        email: emailController.text,
                         password: passwordController.text,
                       );
 
                       if (isSuccessful) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return HomePage(
-                                currentUser: AuthManager.instance.email,
-                                cameras: cameras,
-                              );
-                            },
-                          ),
-                        );
+                        _navigateToHome();
+                        passwordController.text = "";
                       }
                     }
                   },
@@ -101,13 +117,19 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 15),
                 FlexibleButton(
                   hollowButton: true,
-                  onClick: () {
+                  onClick: () async {
                     if (_formKey.currentState!.validate()) {
-                      AuthManager.instance.createUserWithEmailPassword(
+                      final isSuccessful = await AuthManager.instance
+                          .createUserWithEmailPassword(
                         context: context,
-                        emailAddress: emailController.text,
+                        email: emailController.text,
                         password: passwordController.text,
                       );
+
+                      if (isSuccessful) {
+                        _navigateToHome();
+                        passwordController.text = "";
+                      }
                     }
                   },
                   buttonText: "Sign Up",
@@ -116,6 +138,19 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return HomePage(
+            currentUser: AuthManager.instance.email,
+            cameras: widget.cameras,
+          );
+        },
       ),
     );
   }

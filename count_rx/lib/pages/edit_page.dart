@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:count_rx/models/pill_count.dart';
 import 'package:flutter/material.dart';
 
 import '../components/flexible_button.dart';
@@ -27,15 +28,12 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   TextEditingController titleTextController = TextEditingController();
-  TextEditingController descriptionTextController = TextEditingController();
   StreamSubscription? _pillCountSubscription;
-  DateTime timestamp = DateTime.now();
+  PillCount? pc;
 
   @override
   void initState() {
-    PillCountDocumentManager.instance.clearLatest();
-
-    PillCountDocumentManager.instance.startListening(
+    _pillCountSubscription = PillCountDocumentManager.instance.startListening(
       documentId: widget.documentId,
       observer: () {
         print("Got pill count!");
@@ -46,13 +44,13 @@ class _EditPageState extends State<EditPage> {
         setState(() {});
       },
     );
+    pc = PillCountDocumentManager.instance.latestPillCount;
     super.initState();
   }
 
   @override
   void dispose() {
     titleTextController.dispose();
-    descriptionTextController.dispose();
     PillCountDocumentManager.instance.stopListening(_pillCountSubscription);
     super.dispose();
   }
@@ -62,15 +60,24 @@ class _EditPageState extends State<EditPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Page'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            onPressed: () {
+              PillCountDocumentManager.instance.delete();
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // Image.file(
-          //   File(widget.imagePath),
-          //   height: 200,
-          //   width: 200,
-          // ),
+          Image.network(
+            pc!.imageUrl,
+            height: 400,
+          ),
           const SizedBox(height: 20),
           TextField(
             controller: titleTextController,
@@ -82,24 +89,18 @@ class _EditPageState extends State<EditPage> {
           const SizedBox(height: 10),
           TextField(
             readOnly: true,
-            controller:
-                TextEditingController(text: timestamp.toLocal().toString()),
+            controller: TextEditingController(
+                text: PillCountDocumentManager
+                    .instance.latestPillCount!.timestamp
+                    .toString()),
             decoration: const InputDecoration(
               labelText: 'Timestamp',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: descriptionTextController,
-            decoration: const InputDecoration(
-              labelText: 'Description (Optional)',
-              border: OutlineInputBorder(),
+              border: UnderlineInputBorder(),
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FlexibleButton(
                 buttonText: 'Save and Close',
@@ -107,8 +108,11 @@ class _EditPageState extends State<EditPage> {
               ),
               const SizedBox(height: 15),
               FlexibleButton(
+                hollowButton: true,
                 buttonText: 'Cancel',
-                onClick: () {},
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           ),

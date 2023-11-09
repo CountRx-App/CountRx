@@ -13,23 +13,26 @@ class PillCountCollectionManager {
       : _ref = FirebaseFirestore.instance.collection(kPillCountCollectionPath);
 
   Query<PillCount> get myPillCountQuery => _ref
+      .where(kPillCountAuthorUid, isEqualTo: AuthManager.instance.uid)
       .orderBy(kPillCountTimestamp, descending: true)
       .withConverter(
         fromFirestore: (snapshot, _) => PillCount.from(snapshot),
         toFirestore: (pc, _) => pc.toMap(),
-      )
-      .where(kPillCountAuthorUid, isEqualTo: AuthManager.instance.uid);
+      );
 
   void add({
-    String name = "",
+    required String name,
     required int count,
     required DateTime timestamp,
+    required String imageUrl,
+    required String authorUid,
   }) {
     _ref.add({
       kPillCountName: name,
       kPillCountCount: count,
       kPillCountTimestamp: timestamp,
-      kPillCountAuthorUid: AuthManager.instance.uid,
+      kPillCountAuthorUid: authorUid,
+      kPillCountImageUrl: imageUrl,
     }).then((docId) {
       print("Finished adding a document that now has id $docId");
     }).catchError((error) {

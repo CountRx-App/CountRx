@@ -25,6 +25,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+
     controller = CameraController(widget.cameras![0], ResolutionPreset.max);
     controller.initialize().then((_) {
       if (!mounted) {
@@ -35,7 +36,13 @@ class _CameraPageState extends State<CameraPage> {
       if (e is CameraException) {
         switch (e.code) {
           case 'CameraAccessDenied':
-            // Handle access errors here.
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     content: Text(
+            //       "Camera access denied. Please give CountRx permission to use the camera",
+            //     ),
+            //   ),
+            // );
             break;
           default:
             // Handle other errors here.

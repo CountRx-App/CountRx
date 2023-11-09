@@ -1,6 +1,5 @@
 import 'package:count_rx/firebase_options.dart';
 import 'package:count_rx/models/pill_counter.dart';
-import 'package:count_rx/pages/home_page.dart';
 import 'package:count_rx/pages/login_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +13,8 @@ PillCounter counter = PillCounter();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final List<CameraDescription> cameras = await availableCameras();
+
+  print(cameras.length);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -29,9 +30,7 @@ void main() async {
     ),
   );
 
-  runApp(MyApp(
-    cameras: cameras,
-  ));
+  runApp(MyApp(cameras: cameras));
 }
 
 class MyApp extends StatelessWidget {
@@ -52,7 +51,6 @@ class MyApp extends StatelessWidget {
     required this.cameras,
   });
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
@@ -67,10 +65,6 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        // home: HomePage(
-        //   currentUser: "User",
-        //   cameras: cameras, // Invalid constant value error
-        // ),
         home: LoginPage(
           cameras: cameras,
         ),

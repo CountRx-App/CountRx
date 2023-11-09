@@ -9,18 +9,29 @@ class PillCountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTapCallback,
-      leading: const Icon(Icons.movie),
-      title: Text(
-        pillCount.name,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        pillCount.timestamp.toString(),
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: const Icon(Icons.chevron_right),
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Card(
+          child: ListTile(
+            onTap: onTapCallback,
+            leading: const Icon(Icons.movie),
+            title: Text(
+              pillCount.name.isEmpty
+                  ? pillCount.timestamp.toString()
+                  : pillCount.name,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: pillCount.name.isEmpty
+                ? null
+                : Text(
+                    pillCount.timestamp.toString(),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            trailing: const Icon(Icons.chevron_right),
+          ),
+        ),
+      ],
     );
   }
 }

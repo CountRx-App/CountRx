@@ -33,9 +33,9 @@ class _HomePageState extends State<HomePage> {
             height: 100,
             child: Center(
               child: Text(
-                "Welcome ${widget.currentUser}",
+                "Welcome ${widget.currentUser.split("@").first}!",
                 style: const TextStyle(
-                  fontSize: 40,
+                  fontSize: 30,
                 ),
               ),
             ),
@@ -65,20 +65,19 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: HomePageDrawer(),
-      floatingActionButton: Container(
-        alignment: Alignment.bottomCenter,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CameraPage(cameras: widget.cameras),
-              ),
-            );
-          },
-          child: const Icon(Icons.camera_alt),
-        ),
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CameraPage(cameras: widget.cameras),
+            ),
+          );
+        },
+        child: const Icon(Icons.camera_alt),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
