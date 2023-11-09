@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:count_rx/models/pill_count.dart';
-import 'package:flutter/material.dart';
 
 class PillCountDocumentManager {
   PillCount? latestPillCount;
@@ -23,25 +22,15 @@ class PillCountDocumentManager {
     }, onError: (error) {
       print("Error getting the document $error");
     });
-
-    // return _ref.snapshots().listen((QuerySnapshot querySnapshot) {
-    //   latestMovieQuotes =
-    //       querySnapshot.docs.map((doc) => MovieQuote.from(doc)).toList();
-    //   observer();
-    // }, onError: (error) {
-    //   debugPrint("Error listening $error");
-    // });
   }
 
   void stopListening(StreamSubscription? subscription) {
     subscription?.cancel();
   }
 
-  void update({required String title, required String description}) {
+  void update({required String name}) {
     _ref.doc(latestPillCount!.documentId!).update({
-      kPillCountTitle: title,
-      kPillCountDescription: description,
-      kPillCountTimestamp: Timestamp.now(),
+      kPillCountName: name,
     }).then((_) {
       print("Finished updating the document");
     }).catchError((error) {
@@ -61,6 +50,5 @@ class PillCountDocumentManager {
       latestPillCount != null && latestPillCount!.authorUid.isNotEmpty;
   String get authorUid => latestPillCount?.authorUid ?? "";
 
-  String get title => latestPillCount?.title ?? "";
-  String get description => latestPillCount?.desciption ?? "";
+  String get name => latestPillCount?.name ?? "";
 }

@@ -12,12 +12,6 @@ class PillCountCollectionManager {
   PillCountCollectionManager._privateConstructor()
       : _ref = FirebaseFirestore.instance.collection(kPillCountCollectionPath);
 
-  // Query<PillCount> get allPillCountQuery =>
-  //     _ref.orderBy(kPillCountTimestamp, descending: true).withConverter(
-  //           fromFirestore: (snapshot, _) => PillCount.from(snapshot),
-  //           toFirestore: (pc, _) => pc.toMap(),
-  //         );
-
   Query<PillCount> get myPillCountQuery => _ref
       .orderBy(kPillCountTimestamp, descending: true)
       .withConverter(
@@ -27,14 +21,12 @@ class PillCountCollectionManager {
       .where(kPillCountAuthorUid, isEqualTo: AuthManager.instance.uid);
 
   void add({
-    required String title,
-    required String description,
+    String name = "",
     required int count,
     required DateTime timestamp,
   }) {
     _ref.add({
-      kPillCountTitle: title,
-      kPillCountDescription: description,
+      kPillCountName: name,
       kPillCountCount: count,
       kPillCountTimestamp: timestamp,
       kPillCountAuthorUid: AuthManager.instance.uid,

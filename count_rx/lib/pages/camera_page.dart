@@ -68,19 +68,31 @@ class _CameraPageState extends State<CameraPage> {
 
       // print(await counter.count(image: image));
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PreviewPage(
-            imagePath: picture.path,
-            detectedObjects: detectedObjects,
-            aspectRatio: aspectRatio,
-          ),
-        ),
+      _switchToPreviewPage(
+        imagePath: picture.path,
+        detectedObjects: detectedObjects,
+        aspectRatio: aspectRatio,
       );
     } catch (e) {
       print("Error taking picture: $e");
     }
+  }
+
+  void _switchToPreviewPage({
+    required String imagePath,
+    required List<DetectedObject> detectedObjects,
+    required double aspectRatio,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PreviewPage(
+          imagePath: imagePath,
+          detectedObjects: detectedObjects,
+          aspectRatio: aspectRatio,
+        ),
+      ),
+    );
   }
 
   @override

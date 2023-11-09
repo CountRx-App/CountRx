@@ -13,7 +13,7 @@ class PillCountRow extends StatelessWidget {
       onTap: onTapCallback,
       leading: const Icon(Icons.movie),
       title: Text(
-        pillCount.title,
+        pillCount.name,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AuthManager {
   static final instance = AuthManager._privateConstructor();
@@ -68,18 +67,18 @@ class AuthManager {
     _logoutObservers.remove(keyToRemove); // The other is a no-op
   }
 
-  void createUserWithEmailPassword({
+  Future<bool> createUserWithEmailPassword({
     required BuildContext context,
     required String emailAddress,
     required String password,
   }) async {
     // From: https://firebase.google.com/docs/auth/flutter/password-auth
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == "weak-password") {
         _showAuthError(context, "The password provided is too weak.");
@@ -89,17 +88,19 @@ class AuthManager {
     } catch (e) {
       print(e);
     }
+    return false;
   }
 
-  void loginExistingUserWithEmailPassword({
+  Future<bool> loginExistingUserWithEmailPassword({
     required BuildContext context,
     required String emailAddress,
     required String password,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
       print("Finished sign in");
+      return true;
     } on FirebaseAuthException catch (e) {
       print(e.code);
       if (e.code == "user-not-found") {
@@ -114,6 +115,7 @@ class AuthManager {
     } catch (e) {
       _showAuthError(context, e.toString());
     }
+    return false;
   }
 
   void signOut() {

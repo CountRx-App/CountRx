@@ -66,11 +66,11 @@ class _EditPageState extends State<EditPage> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Image.file(
-            File(widget.imagePath),
-            height: 200,
-            width: 200,
-          ),
+          // Image.file(
+          //   File(widget.imagePath),
+          //   height: 200,
+          //   width: 200,
+          // ),
           const SizedBox(height: 20),
           TextField(
             controller: titleTextController,
@@ -103,11 +103,12 @@ class _EditPageState extends State<EditPage> {
             children: [
               FlexibleButton(
                 buttonText: 'Save and Close',
-                onClickCallback: () {},
+                onClick: () {},
               ),
+              const SizedBox(height: 15),
               FlexibleButton(
                 buttonText: 'Cancel',
-                onClickCallback: () {},
+                onClick: () {},
               ),
             ],
           ),

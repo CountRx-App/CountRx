@@ -1,3 +1,4 @@
+import 'package:count_rx/pages/history_page.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:count_rx/components/home_page_drawer.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,9 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.history_edu),
               trailing: const Icon(Icons.menu),
               onTap: () {
-                // TODO: Open history page, when implemented
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const HistoryPage()),
+                );
               },
             ),
           ),

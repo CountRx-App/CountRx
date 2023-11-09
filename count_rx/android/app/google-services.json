@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "115604876680",
+    "project_id": "countrx-f944b",
+    "storage_bucket": "countrx-f944b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115604876680:android:a1358bebcc661e26549e3d",
+        "android_client_info": {
+          "package_name": "com.cosmicelijah.count_rx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEv4V6oNTAQHGmrkN99Mw44YFEY8owhoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
