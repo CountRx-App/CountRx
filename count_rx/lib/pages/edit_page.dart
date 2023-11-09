@@ -7,13 +7,13 @@ import '../components/flexible_button.dart';
 class EditPage extends StatefulWidget {
   final String imagePath;
   final void Function(String, DateTime, String?) onSubmit;
-  final void Function() onCancel;
+  // final void Function() onCancel;
 
   const EditPage({
     super.key,
     required this.imagePath,
     required this.onSubmit,
-    required this.onCancel,
+    // required this.onCancel,
   });
 
   @override
@@ -71,12 +71,14 @@ class _EditPageState extends State<EditPage> {
             children: [
               FlexibleButton(
                 buttonText: 'Submit',
-                onClickCallback: () {},
+                onClickCallback: () {
+                  onSubmit();
+                },
               ),
-              FlexibleButton(
-                buttonText: 'Cancel',
-                onClickCallback: () {},
-              ),
+              // FlexibleButton(
+              //   buttonText: 'Cancel',
+              //   onClickCallback: () {},
+              // ),
             ],
           ),
         ],
