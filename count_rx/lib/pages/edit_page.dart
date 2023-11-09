@@ -25,8 +25,8 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  TextEditingController titleTextController = TextEditingController();
+  TextEditingController descriptionTextController = TextEditingController();
   DateTime timestamp = DateTime.now();
 
   @override
@@ -76,7 +76,7 @@ class _EditPageState extends State<EditPage> {
           ),
           const SizedBox(height: 20),
           TextField(
-            controller: titleController,
+            controller: titleTextController,
             decoration: const InputDecoration(
               labelText: 'Title',
               border: OutlineInputBorder(),
@@ -94,7 +94,7 @@ class _EditPageState extends State<EditPage> {
           ),
           const SizedBox(height: 10),
           TextField(
-            controller: descriptionController,
+            controller: descriptionTextController,
             decoration: const InputDecoration(
               labelText: 'Description (Optional)',
               border: OutlineInputBorder(),

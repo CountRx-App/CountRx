@@ -57,9 +57,9 @@ class PillCountDocumentManager {
     latestPillCount = null;
   }
 
-  // bool get hasAuthorUid =>
-  //     latestPillCount != null && latestPillCount!.authorUid.isNotEmpty;
-  // String get authorUid => latestPillCount?.authorUid ?? "";
+  bool get hasAuthorUid =>
+      latestPillCount != null && latestPillCount!.authorUid.isNotEmpty;
+  String get authorUid => latestPillCount?.authorUid ?? "";
 
   String get title => latestPillCount?.title ?? "";
   String get description => latestPillCount?.desciption ?? "";

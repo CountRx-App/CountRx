@@ -37,7 +37,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ],
       ),
       body: FirestoreListView<PillCount>(
-        query: PillCountCollectionManager.instance.allPillCountsQuery,
+        query: PillCountCollectionManager.instance.myPillCountQuery,
         itemBuilder: (context, snapshot) {
           // Data is now typed!  The data is already a MovieQuote
           PillCount cr = snapshot.data();
