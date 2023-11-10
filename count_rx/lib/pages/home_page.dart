@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: HomePageDrawer(),
+      drawer: const HomePageDrawer(),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {

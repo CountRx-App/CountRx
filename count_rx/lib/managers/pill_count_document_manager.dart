@@ -28,10 +28,7 @@ class PillCountDocumentManager {
     subscription?.cancel();
   }
 
-  void update({String? name, int? count}) {
-    name ??= latestPillCount!.name;
-    count ??= latestPillCount!.count;
-
+  void update({required String name, required int count}) {
     _ref.doc(latestPillCount!.documentId!).update({
       kPillCountName: name,
       kPillCountCount: count,

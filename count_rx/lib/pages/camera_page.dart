@@ -36,13 +36,6 @@ class _CameraPageState extends State<CameraPage> {
       if (e is CameraException) {
         switch (e.code) {
           case 'CameraAccessDenied':
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(
-            //     content: Text(
-            //       "Camera access denied. Please give CountRx permission to use the camera",
-            //     ),
-            //   ),
-            // );
             break;
           default:
             // Handle other errors here.
@@ -116,41 +109,4 @@ class _CameraPageState extends State<CameraPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return InputCameraView(
-  //     cameraDefault: InputCameraType.rear,
-  //     // resolutionPreset: ResolutionPreset.high,
-  //     title: 'Object Detection & Tracking',
-  //     onImage: _takePictureAndNavigate,
-  //     overlay: Consumer<ObjectDetectionState>(
-  //       builder: (_, state, __) {
-  //         if (state.isEmpty) {
-  //           return Container();
-  //         }
-
-  //         Size originalSize = state.size!;
-  //         Size size = MediaQuery.of(context).size;
-
-  //         // if image source from gallery
-  //         // image display size is scaled to 360x360 with retaining aspect ratio
-  //         if (state.notFromLive) {
-  //           if (originalSize.aspectRatio > 1) {
-  //             size = Size(360.0, 360.0 / originalSize.aspectRatio);
-  //           } else {
-  //             size = Size(360.0 * originalSize.aspectRatio, 360.0);
-  //           }
-  //         }
-
-  //         return ObjectOverlay(
-  //           size: size,
-  //           originalSize: originalSize,
-  //           rotation: state.rotation,
-  //           objects: state.data,
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 }

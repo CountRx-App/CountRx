@@ -1,25 +1,16 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:count_rx/components/flexible_button.dart';
+import 'package:count_rx/managers/pill_count_document_manager.dart';
 import 'package:count_rx/models/pill_count.dart';
 import 'package:flutter/material.dart';
 
-import '../components/flexible_button.dart';
-import '../managers/pill_count_document_manager.dart';
-
 class EditPage extends StatefulWidget {
   final String documentId;
-  // final String imagePath;
-  // final void Function(String, DateTime, String?) onSubmit;
-  // final void Function() onCancel;
 
   const EditPage(
     this.documentId, {
     super.key,
-
-    // required this.imagePath,
-    // required this.onSubmit,
-    // required this.onCancel,
   });
 
   @override
@@ -104,7 +95,12 @@ class _EditPageState extends State<EditPage> {
             children: [
               FlexibleButton(
                 buttonText: 'Save and Close',
-                onClick: () {},
+                onClick: () {
+                  PillCountDocumentManager.instance.update(
+                    name: pc!.name,
+                    count: pc!.count,
+                  );
+                },
               ),
               const SizedBox(height: 15),
               FlexibleButton(
