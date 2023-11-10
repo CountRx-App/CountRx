@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:count_rx/components/flexible_button.dart';
 import 'package:count_rx/managers/pill_count_document_manager.dart';
-import 'package:count_rx/models/pill_count.dart';
 import 'package:flutter/material.dart';
 
 class EditPage extends StatefulWidget {

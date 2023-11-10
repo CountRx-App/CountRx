@@ -104,10 +104,10 @@ class _PreviewPageState extends State<PreviewPage> {
                           name: nameController.text,
                           count: int.parse(countController.text),
                           timestamp: DateTime.now(),
-                          // TODO: Add url here when firebase storage is implemented (replace the discord url)
                           imageUrl: imageUrl,
                           authorUid: AuthManager.instance.uid,
                         );
+                        Navigator.of(context).pop();
                       }
                     },
                   ),

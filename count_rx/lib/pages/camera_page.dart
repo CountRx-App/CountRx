@@ -101,6 +101,10 @@ class _CameraPageState extends State<CameraPage> {
       return Container();
     }
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Camera Page"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: CameraPreview(controller),
       floatingActionButton: FloatingActionButton(
         onPressed: _takePictureAndNavigate,
