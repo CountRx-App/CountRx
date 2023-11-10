@@ -6,6 +6,7 @@ import 'package:count_rx/managers/auth_manager.dart';
 import 'package:count_rx/managers/pill_count_collection_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_object_detection/learning_object_detection.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class PreviewPage extends StatefulWidget {
   final String imagePath;
@@ -28,6 +29,7 @@ class _PreviewPageState extends State<PreviewPage> {
   TextEditingController countController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
   void initState() {
@@ -94,17 +96,16 @@ class _PreviewPageState extends State<PreviewPage> {
                   const SizedBox(height: 40),
                   FlexibleButton(
                     buttonText: "Submit and Take New Picture",
-                    onClick: () {
+                    onClick: () async {
                       if (_formKey.currentState!.validate()) {
-                        // TODO: upload the image to firebase
-
+                        String imageUrl =
+                            await _uploadImageToFirebase(widget.imagePath);
                         PillCountCollectionManager.instance.add(
                           name: nameController.text,
                           count: int.parse(countController.text),
                           timestamp: DateTime.now(),
                           // TODO: Add url here when firebase storage is implemented (replace the discord url)
-                          imageUrl:
-                              "https://media.discordapp.net/attachments/787793633943748613/1170898777306038302/rn_image_picker_lib_temp_44c559ea-3c45-49a9-838d-d432929298fc.jpg?ex=655ab776&is=65484276&hm=5b6ec0c99be67de9db1a684727c82e14ae1d14daf079ec38a4df79c6bd1cd1a8&=&width=1248&height=1664",
+                          imageUrl: imageUrl,
                           authorUid: AuthManager.instance.uid,
                         );
                       }
@@ -117,6 +118,16 @@ class _PreviewPageState extends State<PreviewPage> {
         ),
       ),
     );
+  }
+
+  Future<String> _uploadImageToFirebase(String imagePath) async {
+    String imageName = "image_${DateTime.now().millisecondsSinceEpoch}.jpg";
+    Reference storageReference = storage.ref().child("Photos/$imageName");
+
+    UploadTask uploadTask = storageReference.putFile(File(imagePath));
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => {});
+
+    return await taskSnapshot.ref.getDownloadURL();
   }
 
   List<Rect> _getRects() {
