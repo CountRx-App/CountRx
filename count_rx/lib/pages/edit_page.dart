@@ -21,7 +21,7 @@ class _EditPageState extends State<EditPage> {
   final titleController = TextEditingController();
   final countController = TextEditingController();
   StreamSubscription? _pillCountSubscription;
-  late PillCount pc;
+  // late PillCount pc;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -47,9 +47,16 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    pc = PillCountDocumentManager.instance.latestPillCount!;
-    titleController.text = pc.name;
-    countController.text = pc.count.toString();
+    // pc = PillCountDocumentManager.instance.latestPillCount!;
+    titleController.text =
+        PillCountDocumentManager.instance.latestPillCount?.name ?? "";
+    countController.text =
+        PillCountDocumentManager.instance.latestPillCount?.count.toString() ??
+            "";
+
+    // if (PillCountDocumentManager.instance.latestPillCount != null) {
+    //   print("Not null: ${PillCountDocumentManager.instance.latestPillCount}");
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +78,7 @@ class _EditPageState extends State<EditPage> {
           padding: const EdgeInsets.all(16.0),
           children: [
             Image.network(
-              pc.imageUrl,
+              PillCountDocumentManager.instance.latestPillCount?.imageUrl ?? "",
               height: 400,
             ),
             const SizedBox(height: 20),

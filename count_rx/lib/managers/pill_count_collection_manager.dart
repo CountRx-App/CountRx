@@ -20,6 +20,15 @@ class PillCountCollectionManager {
         toFirestore: (pc, _) => pc.toMap(),
       );
 
+  Query<PillCount> get latestPillCount => _ref
+      .where(kPillCountAuthorUid, isEqualTo: AuthManager.instance.uid)
+      .orderBy(kPillCountTimestamp, descending: false)
+      .limitToLast(1)
+      .withConverter(
+        fromFirestore: (snapshot, _) => PillCount.from(snapshot),
+        toFirestore: (pc, _) => pc.toMap(),
+      );
+
   void add({
     required String name,
     required int count,

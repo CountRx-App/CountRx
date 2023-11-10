@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:count_rx/managers/pill_count_collection_manager.dart';
+import 'package:count_rx/models/pill_count.dart';
+import 'package:count_rx/pages/edit_page.dart';
 import 'package:count_rx/pages/history_page.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:count_rx/components/home_page_drawer.dart';
@@ -57,8 +61,20 @@ class _HomePageState extends State<HomePage> {
               title: const Text("Most Recent"),
               leading: const Icon(Icons.history),
               trailing: const Icon(Icons.menu),
-              onTap: () {
+              onTap: () async {
                 // TODO: Open "most recent" detail page, when implemented
+                QueryDocumentSnapshot<PillCount> snapshot =
+                    await PillCountCollectionManager.instance.latestPillCount
+                        .get()
+                        .then((snapshot) => snapshot.docs[0]);
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return EditPage(snapshot.id);
+                    },
+                  ),
+                );
               },
             ),
           ),

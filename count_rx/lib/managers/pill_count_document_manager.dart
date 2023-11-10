@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:count_rx/managers/auth_manager.dart';
 import 'package:count_rx/models/pill_count.dart';
 
 class PillCountDocumentManager {
@@ -26,6 +27,15 @@ class PillCountDocumentManager {
       },
     );
   }
+
+  Query<PillCount> get latestPillCountQuery => _ref
+      .where(kPillCountAuthorUid, isEqualTo: AuthManager.instance.uid)
+      .orderBy(kPillCountTimestamp, descending: true)
+      .limitToLast(1)
+      .withConverter(
+        fromFirestore: (snapshot, _) => PillCount.from(snapshot),
+        toFirestore: (pc, _) => pc.toMap(),
+      );
 
   void stopListening(StreamSubscription? subscription) {
     subscription?.cancel();
