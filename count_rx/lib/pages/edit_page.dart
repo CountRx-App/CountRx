@@ -36,7 +36,7 @@ class _EditPageState extends State<EditPage> {
     _pillCountSubscription = PillCountDocumentManager.instance.startListening(
       documentId: widget.documentId,
       observer: () {
-        print("Got pill count!");
+        // print("Got pill count!");
 
         if (PillCountDocumentManager.instance.hasAuthorUid) {
           setState(() {});

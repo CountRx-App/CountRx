@@ -6,6 +6,7 @@ import 'package:count_rx/managers/auth_manager.dart';
 import 'package:count_rx/managers/pill_count_collection_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_object_detection/learning_object_detection.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class PreviewPage extends StatefulWidget {
   final String imagePath;
@@ -28,6 +29,7 @@ class _PreviewPageState extends State<PreviewPage> {
   TextEditingController countController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
   void initState() {
@@ -94,14 +96,16 @@ class _PreviewPageState extends State<PreviewPage> {
                   const SizedBox(height: 40),
                   FlexibleButton(
                     buttonText: "Submit and Take New Picture",
-                    onClick: () {
+                    onClick: () async {
                       if (_formKey.currentState!.validate()) {
+                        String imageUrl =
+                            await _uploadImageToFirebase(widget.imagePath);
                         PillCountCollectionManager.instance.add(
                           name: nameController.text,
                           count: int.parse(countController.text),
                           timestamp: DateTime.now(),
                           imageUrl:
-                              "", // TODO: Add url here when firebase storage is implemented
+                              imageUrl, // TODO: Add url here when firebase storage is implemented
                           authorUid: AuthManager.instance.uid,
                         );
                       }
@@ -114,6 +118,16 @@ class _PreviewPageState extends State<PreviewPage> {
         ),
       ),
     );
+  }
+
+  Future<String> _uploadImageToFirebase(String imagePath) async {
+    String imageName = "image_${DateTime.now().millisecondsSinceEpoch}.jpg";
+    Reference storageReference = storage.ref().child("Photos/$imageName");
+
+    UploadTask uploadTask = storageReference.putFile(File(imagePath));
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => {});
+
+    return await taskSnapshot.ref.getDownloadURL();
   }
 
   List<Rect> _getRects() {
