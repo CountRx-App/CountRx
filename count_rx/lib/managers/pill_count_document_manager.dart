@@ -13,15 +13,18 @@ class PillCountDocumentManager {
 
   StreamSubscription startListening({
     required String documentId,
-    required Function observer,
+    required void Function() observer,
   }) {
     return _ref.doc(documentId).snapshots().listen(
-        (DocumentSnapshot documentSnapshot) {
-      latestPillCount = PillCount.from(documentSnapshot);
-      observer();
-    }, onError: (error) {
-      print("Error getting the document $error");
-    });
+      (DocumentSnapshot documentSnapshot) {
+        latestPillCount = PillCount.from(documentSnapshot);
+        print(latestPillCount.toString());
+        observer();
+      },
+      onError: (error) {
+        print("Error getting the document $error");
+      },
+    );
   }
 
   void stopListening(StreamSubscription? subscription) {

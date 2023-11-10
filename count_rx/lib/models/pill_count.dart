@@ -49,4 +49,9 @@ class PillCount {
         kPillCountAuthorUid: authorUid,
         kPillCountImageUrl: imageUrl,
       };
+
+  @override
+  String toString() {
+    return "Title: $name, Count: $count";
+  }
 }

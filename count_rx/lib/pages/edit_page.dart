@@ -26,27 +26,31 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
+    PillCountDocumentManager.instance.clearLatest();
+
     _pillCountSubscription = PillCountDocumentManager.instance.startListening(
       documentId: widget.documentId,
       observer: () {
         setState(() {});
       },
     );
-    pc = PillCountDocumentManager.instance.latestPillCount!;
-    titleController.text = pc.name;
-    countController.text = pc.count.toString();
     super.initState();
   }
 
   @override
   void dispose() {
     titleController.dispose();
+    countController.dispose();
     PillCountDocumentManager.instance.stopListening(_pillCountSubscription);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    pc = PillCountDocumentManager.instance.latestPillCount!;
+    titleController.text = pc.name;
+    countController.text = pc.count.toString();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Page'),
