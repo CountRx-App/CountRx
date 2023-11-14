@@ -26,8 +26,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    emailController.text = "cosmicelijah@gmail.com";
-    passwordController.text = "Coconut2003!";
     _loginKey = AuthManager.instance.addObserver(
         observer: () {
           print("Called my login observer");

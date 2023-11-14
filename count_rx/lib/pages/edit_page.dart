@@ -47,6 +47,15 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     // pc = PillCountDocumentManager.instance.latestPillCount!;
+    if (PillCountDocumentManager.instance.latestPillCount == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Edit Page"),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        ),
+      );
+    }
+
     titleController.text =
         PillCountDocumentManager.instance.latestPillCount?.name ?? "";
     countController.text =
